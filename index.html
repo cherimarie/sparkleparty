@@ -224,7 +224,7 @@ function createDiv(height, width) {
   div.style.width=width+"px";
   div.classList.add("meow");
   let randoKitty = kitties[Math.floor(Math.random() * kitties.length)]
-  div.style.backgroundImage = `url("${randoKitty}.png")`;
+  div.style.backgroundImage = `url("./img/${randoKitty}.png")`;
   div.style.overflow="hidden";
   return (div);
 }

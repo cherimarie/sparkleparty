@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>cats</title>
+<STYLE TYPE="text/css">
+
+</STYLE>
+</head>
+<body>
+
+  <script type="text/javascript">
+// <![CDATA[
+
+/****************************
+*  Tinkerbell Magic Sparkle *
+* (c) 2005 mf2fm web-design *
+*  http://www.mf2fm.com/rv  *
+* DON'T EDIT BELOW THIS BOX *
+****************************/
+      
+// The number of sparkles & tinies (respectively) that will show on the page
+var sparkles=10;
+      
+// Possible colors
+var colours = ["magenta", "purple", "violet", "deeppink", "pink"]
+      
+// No idea what these are yet
+var sleft=sdown=0;
+var x=ox=400;
+var y=oy=300;
+      
+// I think these represent the size of the zone in which stars & tinies can exist,
+// they disappear if they are farther than this from the cursor?
+var swide=800;
+var shigh=600;
+      
+// Each star or tiny is respresented by 4 values, held in 4 different arrays, at the same indices
+// The tiny & star arrays hold the divs that appear on the page
+var tiny=new Array();
+var star=new Array();
+
+// v values represent the time to live for a star or tiny
+// x and y values represent position
+var starv=new Array();      
+var starx=new Array();
+var stary=new Array();
+      
+var tinyx=new Array();
+var tinyy=new Array();
+var tinyv=new Array();
+      
+// Defines the sizes that stars and tinies show at different times in their lifespans
+const sizes = {
+    xl: 50,
+    l: 30,
+    m: 15,
+    s: 5
+}
+
+window.onload=function() { if (document.getElementById) {
+  for (var i=0; i<sparkles; i++) {
+    // Load up the stars & tinies arrays with the divs for all elements that will ever show
+    // and set their v to 0 so they are not immediately visible
+    var newTiny=createDiv(sizes.m, sizes.m);
+    newTiny.style.visibility="hidden";
+    document.body.appendChild(newTiny);
+    tiny[i]=newTiny
+    tinyv[i]=0;
+      
+    var newStar=createDiv(sizes.xl, sizes.xl);
+    newStar.style.visibility="hidden";
+    document.body.appendChild(newStar);
+    star[i]=newStar
+    starv[i]=0;
+  }
+
+  set_width();
+  sparkle();
+}}
+
+function sparkle() {
+  if (x!=ox || y!=oy) {
+    ox=x;
+    oy=y;
+    for (let c=0; c<sparkles; c++){
+      // if the star is not yet visible
+      if (!starv[c]) {
+          // set it's position, make visible, give a lifespan
+          star[c].style.left=(starx[c]=x)+"px";
+          star[c].style.top=(stary[c]=y)+"px";
+          star[c].style.height= sizes.xl+"px";
+          star[c].style.width= sizes.xl+"px";
+          star[c].style.visibility="visible";
+          starv[c]=50;
+          break;
+        }
+    }
+  }
+  for (c=0; c<sparkles; c++) {
+    // Update stars and tinies that are visible
+    if (starv[c]) update_star(c);
+    if (tinyv[c]) update_tiny(c);
+  }
+  setTimeout("sparkle()", 40);
+}
+
+// Star lifespan gets decremented, it gets converted to tiny if it's time, position is verified
+function update_star(i) {
+  // decrement starv[i] by 1
+  --starv[i]
+  if (starv[i]==25){
+      // Lifespan is half up, shrink to next size down
+      star[i].style.width=sizes.l+"px"
+      star[i].style.height=sizes.l+"px"
+  }
+    
+  if (starv[i]) {
+    // Lifespan still exists, reposition
+    stary[i]+=1+Math.random()*3;
+    if (stary[i]<shigh+sdown) {
+      star[i].style.top=stary[i]+"px";
+      starx[i]+=(i%5-2)/5;
+      star[i].style.left=starx[i]+"px";
+    }
+    else {
+      // Star has left zone of visibility, make invisible, zero out lifespan
+      star[i].style.visibility="hidden";
+      starv[i]=0;
+      return;
+    }
+  } else {
+    // Lifespan has run out, convert it to a tiny
+    tinyv[i]=50;
+    tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+    tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+    tiny[i].style.width=sizes.m+"px"
+    tiny[i].style.height=sizes.m+"px";
+    star[i].style.visibility="hidden";
+    tiny[i].style.visibility="visible"
+  }
+}
+
+// tiny lifespan is decremented, shrinks or disappears if its time
+function update_tiny(i) {
+  // decrement tinyv by 1
+  --tinyv[i]
+    
+  if (tinyv[i]==25) {
+    // Lifespan is half up, shrink
+    tiny[i].style.width=sizes.s+"px";
+    tiny[i].style.height=sizes.s+"px";
+  }
+  if (tinyv[i]) {
+    // Lifespan still exists, reposition
+    tinyy[i]+=1+Math.random()*3;
+    if (tinyy[i]<shigh+sdown) {
+      tiny[i].style.top=tinyy[i]+"px";
+      tinyx[i]+=(i%5-2)/5;
+      tiny[i].style.left=tinyx[i]+"px";
+    }
+    else {
+      // Tiny has left zone of visibility, make invisible, zero out lifespan
+      tiny[i].style.visibility="hidden";
+      tinyv[i]=0;
+      return;
+    }
+  } else {
+      // Lifespan has run out, make invisible
+      tiny[i].style.visibility="hidden"
+  };
+}
+
+document.onmousemove=mouse;
+function mouse(e) {
+  set_scroll();
+  y=(e)?e.pageY:event.y+sdown;
+  x=(e)?e.pageX:event.x+sleft;
+}
+
+function set_scroll() {
+  if (typeof(self.pageYOffset)=="number") {
+    sdown=self.pageYOffset;
+    sleft=self.pageXOffset;
+  }
+  else if (document.body.scrollTop || document.body.scrollLeft) {
+    sdown=document.body.scrollTop;
+    sleft=document.body.scrollLeft;
+  }
+  else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+    sleft=document.documentElement.scrollLeft;
+	sdown=document.documentElement.scrollTop;
+  }
+  else {
+    sdown=0;
+    sleft=0;
+  }
+}
+
+window.onresize=set_width;
+function set_width() {
+  if (typeof(self.innerWidth)=="number") {
+    swide=self.innerWidth;
+    shigh=self.innerHeight;
+  }
+  else if (document.documentElement && document.documentElement.clientWidth) {
+    swide=document.documentElement.clientWidth;
+    shigh=document.documentElement.clientHeight;
+  }
+  else if (document.body.clientWidth) {
+    swide=document.body.clientWidth;
+    shigh=document.body.clientHeight;
+  }
+}
+
+function createDiv(height, width) {
+  var div=document.createElement("div");
+  div.style.position="absolute";
+  div.style.height=height+"px";
+  div.style.width=width+"px";
+    console.log("---- i have created a div: ", div)
+  div.style.overflow="hidden";
+  //div.innerHTML = "🐱";
+  div.style.backgroundColor=colours[Math.floor(Math.random()*colours.length)];;
+  return (div);
+}
+// ]]>
+</script>
+  
+</body>
+</html>

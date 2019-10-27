@@ -4,7 +4,12 @@
 <head>
     <title>cats</title>
 <STYLE TYPE="text/css">
-
+   .meow {
+       background-image: url("meow.png");
+       background-position: center;
+       background-repeat: no-repeat;
+       background-size: cover;
+    }
 </STYLE>
 </head>
 <body>
@@ -20,7 +25,7 @@
 ****************************/
       
 // The number of sparkles & tinies (respectively) that will show on the page
-var sparkles=10;
+var sparkles=30;
       
 // Possible colors
 var colours = ["magenta", "purple", "violet", "deeppink", "pink"]
@@ -52,10 +57,10 @@ var tinyv=new Array();
       
 // Defines the sizes that stars and tinies show at different times in their lifespans
 const sizes = {
-    xl: 50,
-    l: 30,
-    m: 15,
-    s: 5
+    xl: 20,
+    l: 10,
+    m: 5,
+    s: 2
 }
 
 window.onload=function() { if (document.getElementById) {
@@ -102,7 +107,7 @@ function sparkle() {
     if (starv[c]) update_star(c);
     if (tinyv[c]) update_tiny(c);
   }
-  setTimeout("sparkle()", 40);
+  setTimeout("sparkle()", 20);
 }
 
 // Star lifespan gets decremented, it gets converted to tiny if it's time, position is verified
@@ -218,10 +223,9 @@ function createDiv(height, width) {
   div.style.position="absolute";
   div.style.height=height+"px";
   div.style.width=width+"px";
-    console.log("---- i have created a div: ", div)
+  div.classList.add("meow")
   div.style.overflow="hidden";
-  //div.innerHTML = "🐱";
-  div.style.backgroundColor=colours[Math.floor(Math.random()*colours.length)];;
+  // div.style.backgroundColor=colours[Math.floor(Math.random()*colours.length)];;
   return (div);
 }
 // ]]>

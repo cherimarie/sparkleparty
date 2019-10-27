@@ -5,10 +5,10 @@
     <title>cats</title>
 <STYLE TYPE="text/css">
    .meow {
-       background-image: url("meow.png");
        background-position: center;
        background-repeat: no-repeat;
        background-size: cover;
+       position: absolute;
     }
 </STYLE>
 </head>
@@ -18,17 +18,16 @@
 // <![CDATA[
 
 /****************************
+*  BASED ON:                *
 *  Tinkerbell Magic Sparkle *
-* (c) 2005 mf2fm web-design *
 *  http://www.mf2fm.com/rv  *
-* DON'T EDIT BELOW THIS BOX *
 ****************************/
       
 // The number of sparkles & tinies (respectively) that will show on the page
 var sparkles=30;
       
-// Possible colors
-var colours = ["magenta", "purple", "violet", "deeppink", "pink"]
+// Possible cat faces
+var kitties = ["meow1", "meow2", "meow3"]
       
 // No idea what these are yet
 var sleft=sdown=0;
@@ -220,12 +219,13 @@ function set_width() {
 
 function createDiv(height, width) {
   var div=document.createElement("div");
-  div.style.position="absolute";
+  
   div.style.height=height+"px";
   div.style.width=width+"px";
-  div.classList.add("meow")
+  div.classList.add("meow");
+  let randoKitty = kitties[Math.floor(Math.random() * kitties.length)]
+  div.style.backgroundImage = `url("${randoKitty}.png")`;
   div.style.overflow="hidden";
-  // div.style.backgroundColor=colours[Math.floor(Math.random()*colours.length)];;
   return (div);
 }
 // ]]>
